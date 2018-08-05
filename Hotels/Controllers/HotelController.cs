@@ -18,13 +18,13 @@ namespace Hotels.Controllers
         new Hotel(){ Id = 4 , Name = "Hotel Prime Sage Saket" , NumberOfAvailableRooms = 5 , Address = "Malviya Nagar, New Delhi" , LocationCode = "DEL"},
         };
 
-
+        [HttpPost]
         public ApiResponse CreateHotel(Hotel hotel)
         {
             ApiResponse apiResponse = new ApiResponse();
             try
             {
-                if (hotel != null)
+                if (hotel!=null)
                 {
                     _hotelList.Add(hotel);
                     apiResponse.Hotels = _hotelList;
@@ -34,7 +34,7 @@ namespace Hotels.Controllers
                         {
                             ApiStatus = ApiStatus.Successful,
                             ErrorCode = 200,
-                            ErrorMessage = "Hotel Successfully Added!"
+                        //    ErrorMessage = "Hotel Successfully Added!"
                         }
                     };
                 }
@@ -61,7 +61,7 @@ namespace Hotels.Controllers
                     {
                         ApiStatus = ApiStatus.Failed,
                         ErrorCode = 500,
-                        ErrorMessage = "Exception Occurred :" + exc.Message
+                        ErrorMessage = "Internal server error"
                     }
                 };
             }
@@ -72,17 +72,35 @@ namespace Hotels.Controllers
         {
             try
             {
-                return new ApiResponse()
+                if (_hotelList.Count != 0)
                 {
-                    Hotels = _hotelList,
-                    Status = new Status()
+                    return new ApiResponse()
                     {
-                        ApiStatus = ApiStatus.Successful,
-                        ErrorCode = 200,
-                        ErrorMessage = "OK"
-                    }
+                        Hotels = _hotelList,
 
-                };
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Successful,
+                            ErrorCode = 200,
+                          //  ErrorMessage = "OK"
+                        }
+
+                    };
+                }
+                else
+                {
+
+                    return new ApiResponse()
+                    {
+                        Hotels = null,
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Failed,
+                            ErrorCode = 404,
+                            ErrorMessage = "No hotels found"
+                        }
+                    };
+                }
             }
             catch (Exception exc)
             {
@@ -123,7 +141,7 @@ namespace Hotels.Controllers
                 {
                     ApiStatus = ApiStatus.Successful,
                     ErrorCode = 500,
-                    ErrorMessage = "OK"
+                    //ErrorMessage = "OK"
                 }
 
 
@@ -146,7 +164,7 @@ namespace Hotels.Controllers
                         {
                             ApiStatus = ApiStatus.Successful,
                             ErrorCode = 200,
-                           ErrorMessage = "Hotel Successfully Deleted"
+                      //     ErrorMessage = "Hotel Successfully Deleted"
                         }
                     };
                 }
@@ -173,7 +191,7 @@ namespace Hotels.Controllers
                     {
                         ApiStatus = ApiStatus.Failed,
                         ErrorCode = 500,
-                        ErrorMessage = "Exception Occurred :" + exc.Message
+                        ErrorMessage = "Internal server error"
                     }
                 };
             }
@@ -199,7 +217,7 @@ namespace Hotels.Controllers
                             {
                                 ApiStatus = ApiStatus.Successful,
                                 ErrorCode = 200,
-                                ErrorMessage = "Room Booked Successfully"
+                               // ErrorMessage = "Room Booked Successfully"
                             }
                         };
 
@@ -226,7 +244,7 @@ namespace Hotels.Controllers
                         Status = new Status()
                         {
                             ApiStatus = ApiStatus.Failed,
-                            ErrorCode = 404,
+                            ErrorCode = 422,
                             ErrorMessage = "Invalid Data Sent"
                         }
                     };
@@ -242,7 +260,7 @@ namespace Hotels.Controllers
                     {
                         ApiStatus = ApiStatus.Failed,
                         ErrorCode = 500,
-                        ErrorMessage = "Exception Occurred :" + exc.Message
+                        ErrorMessage = "Internal server error"
                     }
                 };
             }
